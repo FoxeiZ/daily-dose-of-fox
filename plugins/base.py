@@ -7,20 +7,6 @@ if TYPE_CHECKING:
     from types.a import ImageType
 
 
-class BasePlugin:
-    def __init__(
-        self,
-        tags: list[str] = [],
-        image_type: "ImageType" = "sample",
-    ):
-        self.tags = tags
-        self.parsed_tags = "+".join(self.tags)
-        self.image_type = f"{image_type.lower()}_url"
-
-    def run(self):
-        raise NotImplementedError
-
-
 @dataclass(init=True, slots=True)
 class BasePostInfo:
     post_id: int
@@ -47,3 +33,17 @@ class BasePostInfo:
 
     def get_uploader(self):
         return self.uploader or "unknown"
+
+
+class BasePlugin:
+    def __init__(
+        self,
+        tags: list[str] = [],
+        image_type: "ImageType" = "sample",
+    ):
+        self.tags = tags
+        self.parsed_tags = "+".join(self.tags)
+        self.image_type = f"{image_type.lower()}_url"
+
+    def run(self) -> BasePostInfo | None:
+        raise NotImplementedError

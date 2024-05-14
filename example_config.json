@@ -1,0 +1,14 @@
+[
+    {
+        "webhook_config": {
+            "url": "",
+            "avatar_url": "https://cdn.discordapp.com/app-assets/1049685078508314696/1239753024969113610.png",
+            "username": "Daily Dose Of Suzuran"
+        },
+        "provider_config": {
+            "name": "gelbooru",
+            "tags": ["suzuran_(spring_praise)_(arknights)", "-rating:explicit"],
+            "type": "file"
+        }
+    }
+]

@@ -45,8 +45,7 @@ def make_webhook_payload(config: "WebhookConfig", data: "BasePostInfo") -> dict:
 
 
 def main():
-    configs = read_config()
-    for config in configs:
+    for config in read_config():
         if (
             not config
             or not config.get("webhook_config")
@@ -64,7 +63,8 @@ def main():
             continue
 
         payload = make_webhook_payload(config["webhook_config"], post)
-        requests.post(config["webhook_config"]["url"], json=payload)
+        webhook_resp = requests.post(config["webhook_config"]["url"], json=payload)
+        webhook_resp.raise_for_status()
 
 
 if __name__ == "__main__":
