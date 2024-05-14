@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 import requests
 
 if TYPE_CHECKING:
-    from types.a import ImageType
+    from typings import ImageType
 
 
 @dataclass(init=True, slots=True)

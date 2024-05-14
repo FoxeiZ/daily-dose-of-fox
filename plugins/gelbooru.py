@@ -6,7 +6,7 @@ from plugins.base import BasePlugin, BasePostInfo
 from .errors import EmptyResponse, NoImageFound
 
 if TYPE_CHECKING:
-    from types.a import ImageType
+    from typings import ImageType
 
 
 class GelbooruPost(BasePostInfo):

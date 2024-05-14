@@ -8,7 +8,7 @@ from plugins.gelbooru import GelbooruPlugin
 
 if TYPE_CHECKING:
     from plugins.base import BasePostInfo
-    from types.a import ConfigT_, ProviderConfig, WebhookConfig
+    from typings import ConfigT_, ProviderConfig, WebhookConfig
 
 
 def get_provider(config: "ProviderConfig") -> BasePlugin | None:
