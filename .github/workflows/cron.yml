@@ -12,9 +12,6 @@ on:
   schedule:
     - cron: "0 2 * * 1-5"
 
-permissions:
-  contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
