@@ -8,11 +8,11 @@ from plugins.gelbooru import GelbooruPlugin
 
 if TYPE_CHECKING:
     from plugins.base import BasePostInfo
-    from types.a import ConfigT_
+    from types.a import ConfigT_, ProviderConfig, WebhookConfig
 
 
-def get_provider(config: "ConfigT_") -> BasePlugin | None:
-    match config["provider"]:
+def get_provider(config: "ProviderConfig") -> BasePlugin | None:
+    match config["name"]:
         case "gelbooru":
             return GelbooruPlugin(config["tags"], config["type"])
 
@@ -22,14 +22,14 @@ def read_config() -> list["ConfigT_"]:
         return json.load(f)
 
 
-def make_webhook_payload(config: "ConfigT_", data: "BasePostInfo") -> dict:
+def make_webhook_payload(config: "WebhookConfig", data: "BasePostInfo") -> dict:
     desc = [f"[Post]({data.get_url()})"]
     if data.source_url:
         desc.append(f"[Source]({data.get_source()})")
     desc.append(f"[Download]({data.file_url})")
 
     payload = {
-        "username": config["name"],
+        "username": config["username"],
         "avatar_url": config["avatar_url"],
         "embeds": [
             {
@@ -47,7 +47,15 @@ def make_webhook_payload(config: "ConfigT_", data: "BasePostInfo") -> dict:
 def main():
     configs = read_config()
     for config in configs:
-        provider = get_provider(config)
+        if (
+            not config
+            or not config.get("webhook_config")
+            or not config.get("provider_config")
+        ):
+            print("Invalid config")
+            continue
+
+        provider = get_provider(config["provider_config"])
         if not provider:
             continue
 
@@ -55,8 +63,8 @@ def main():
         if not post:
             continue
 
-        payload = make_webhook_payload(config, post)
-        requests.post(config["weebhook_url"], json=payload)
+        payload = make_webhook_payload(config["webhook_config"], post)
+        requests.post(config["webhook_config"]["url"], json=payload)
 
 
 if __name__ == "__main__":
