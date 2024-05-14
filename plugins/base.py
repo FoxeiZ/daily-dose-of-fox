@@ -31,7 +31,7 @@ class BasePostInfo:
     uploader: str
 
     def get_url(self):
-        return f"https://gelbooru.com/index.php?page=post&s=view&id={self.post_id}"
+        raise NotImplementedError
 
     def get_file(self):
         response = requests.get(self.file_url)

@@ -3,10 +3,15 @@ from typing import TYPE_CHECKING
 import requests
 
 from plugins.base import BasePlugin, BasePostInfo
-from plugins.errors import EmptyResponse, NoImageFound
+from .errors import EmptyResponse, NoImageFound
 
 if TYPE_CHECKING:
     from types.a import ImageType
+
+
+class GelbooruPost(BasePostInfo):
+    def get_url(self):
+        return f"https://gelbooru.com/index.php?page=post&s=view&id={self.post_id}"
 
 
 class GelbooruPlugin(BasePlugin):
@@ -28,7 +33,7 @@ class GelbooruPlugin(BasePlugin):
             if not post.get(self.image_type):
                 continue
 
-            return BasePostInfo(
+            return GelbooruPost(
                 post_id=post["id"],
                 source_url=post.get("source", ""),
                 file_url=post[self.image_type],

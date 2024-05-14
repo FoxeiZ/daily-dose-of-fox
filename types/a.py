@@ -6,6 +6,7 @@ ConfigT_ = TypedDict(
     "ConfigT_",
     {
         "name": str,
+        "avatar_url": str,
         "weebhook_url": str,
         "tags": list[str],
         "provider": str,

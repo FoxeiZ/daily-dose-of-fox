@@ -22,15 +22,15 @@ def read_config() -> list["ConfigT_"]:
         return json.load(f)
 
 
-def make_webhook_payload(data: "BasePostInfo") -> dict:
+def make_webhook_payload(config: "ConfigT_", data: "BasePostInfo") -> dict:
     desc = [f"[Post]({data.get_url()})"]
     if data.source_url:
         desc.append(f"[Source]({data.get_source()})")
     desc.append(f"[Download]({data.file_url})")
 
     payload = {
-        "username": "Daily Dose Of Fox",
-        "avatar_url": "https://cdn.discordapp.com/app-assets/1049685078508314696/1239753024969113610.png",
+        "username": config["name"],
+        "avatar_url": config["avatar_url"],
         "embeds": [
             {
                 "url": data.get_url(),
@@ -45,9 +45,9 @@ def make_webhook_payload(data: "BasePostInfo") -> dict:
 
 
 def main():
-    config = read_config()
-    for plugin in config:
-        provider = get_provider(plugin)
+    configs = read_config()
+    for config in configs:
+        provider = get_provider(config)
         if not provider:
             continue
 
@@ -55,8 +55,8 @@ def main():
         if not post:
             continue
 
-        payload = make_webhook_payload(post)
-        requests.post(plugin["weebhook_url"], json=payload)
+        payload = make_webhook_payload(config, post)
+        requests.post(config["weebhook_url"], json=payload)
 
 
 if __name__ == "__main__":
