@@ -1,5 +1,6 @@
 from random import randint
 from typing import TYPE_CHECKING
+from time import sleep
 import requests
 
 from plugins.base import BasePlugin, BasePostInfo
@@ -16,6 +17,7 @@ class GelbooruPost(BasePostInfo):
 
 class GelbooruPlugin(BasePlugin):
     url = "https://gelbooru.com/index.php"
+    count = -1
 
     def __init__(
         self,
@@ -43,6 +45,9 @@ class GelbooruPlugin(BasePlugin):
             )
 
     def get_tags_count(self) -> int:
+        if self.count != -1:
+            return self.count
+
         params = {
             "page": "dapi",
             "s": "post",
@@ -62,7 +67,8 @@ class GelbooruPlugin(BasePlugin):
         if count == 0:
             raise NoImageFound()
 
-        return count
+        self.count = count
+        return self.count
 
     def get_random_image(self) -> BasePostInfo | None:
         params = {
@@ -87,16 +93,18 @@ class GelbooruPlugin(BasePlugin):
 
         return self.select_image(data)
 
-    def run(self):
-        for _ in range(5):
+    def _run(self) -> BasePostInfo | None:
+        for retry_count in range(5):
             try:
                 response = self.get_random_image()
+                if response:
+                    return response
             except EmptyResponse:
+                print(
+                    f"[Error_EmptyResponse] No response for provider. Retrying... ({retry_count}/5)"
+                )
+                sleep(1)
                 continue
             except NoImageFound:
+                print("[Error_NoImageFound] No image found. Try changing tags.")
                 return
-
-            if response:
-                break
-
-        return response

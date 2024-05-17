@@ -16,7 +16,7 @@ class BasePostInfo:
     tags: str
     uploader: str
 
-    def get_url(self):
+    def get_url(self) -> str:
         raise NotImplementedError
 
     def get_file(self):
@@ -45,5 +45,18 @@ class BasePlugin:
         self.parsed_tags = "+".join(self.tags)
         self.image_type = f"{image_type.lower()}_url"
 
-    def run(self) -> BasePostInfo | None:
+    def run(self, repeat: int = 1) -> list[BasePostInfo]:
+        posts = []
+        try:
+            for _ in range(repeat):
+                post = self._run()
+                if post:
+                    posts.append(post)
+
+        except Exception as e:
+            print(f"Error_{e.__class__}: {e}")
+
+        return posts
+
+    def _run(self) -> BasePostInfo | None:
         raise NotImplementedError

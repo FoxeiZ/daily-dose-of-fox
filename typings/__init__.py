@@ -3,7 +3,7 @@ from typing import Literal, TypedDict
 
 ImageType = Literal["sample", "file", "preview"]
 WebhookConfig = TypedDict(
-    "WebhookConfig", {"url": str, "avatar_url": str, "username": str}
+    "WebhookConfig", {"url": str, "avatar_url": str | None, "username": str | None}
 )
 ProviderConfig = TypedDict(
     "ProviderConfig",
@@ -18,5 +18,7 @@ ConfigT_ = TypedDict(
     {
         "webhook_config": WebhookConfig,
         "provider_config": ProviderConfig,
+        "repeat": int,
+        "image_count": int,
     },
 )
